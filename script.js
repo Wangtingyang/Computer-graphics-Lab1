@@ -27,6 +27,42 @@ const label4 = document.querySelector(".label-4");
 const colorPickerB = document.querySelector(".main-color-block");
 let mainChange = true;
 //function
+function isRgb(r, g, b) {
+  if (0 <= r && r <= 255 && 0 <= g && g <= 255 && 0 <= b && b <= 255) {
+    return true;
+  }
+  alert(
+    "Data entered incorrectly. Values must be between 0 and 255."
+  );
+  return false;
+}
+function isCmyk(c, m, y, k) {
+  if (
+    0 <= c &&
+    c <= 1 &&
+    0 <= m &&
+    m <= 1 &&
+    0 <= y &&
+    y <= 1 &&
+    0 <= k &&
+    k <= 1
+  ) {
+    return true;
+  }
+  alert(
+    "Data entered incorrectly: CMYK values must be at least 0% and at most 100%."
+  );
+  return false;
+}
+function isLab(l, a, b) {
+  if (0 <= l && l <= 100 && -128 <= a && a <= 128 && -128 <= b && b <= 128) {
+    return true;
+  }
+  alert(
+    "Invalid data entered: valid values 0 <= L <= 100, -128 <= y <= 128, -128 <= z <= 128."
+  );
+  return false;
+}
 function rgb2cmyk(r,g,b){
 	var k = Math.min(1-(r/255),1-(g/255),1-(b/255));
 	var c = (1-(r/255)-k)/(1-k);
@@ -192,21 +228,29 @@ colorPicker.on('color:change', function(color) {
 btnPick.addEventListener("click", () => {
 	var rgb = new Array();
 	var index1 = mainSelect.selectedIndex;
+	var right = new Boolean(0);
 	switch(mainSelect.options[index1].value)
 	{
 		case "rgb":
-			rgb[0]=mainInput1.value;
-			rgb[1]=mainInput2.value;
-			rgb[2]=mainInput3.value
-		break;
+			if(isRgb(mainInput1.value,mainInput2.value,mainInput3.value)){
+				rgb[0]=mainInput1.value;
+				rgb[1]=mainInput2.value;
+				rgb[2]=mainInput3.value;
+				right = true;};
+			break;
 		case "lab":
-			rgb = lab2rgb(mainInput1.value,mainInput2.value,mainInput3.value).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isLab(mainInput1.value,mainInput2.value,mainInput3.value)){
+				rgb = lab2rgb(mainInput1.value,mainInput2.value,mainInput3.value).match(/([+-]?)+\d+(\.\d+)?/g);
+				right = true;};
+			break;
 		case "cmyk":
-			rgb = cmyk2rgb(mainInput1.value,mainInput2.value,mainInput3.value,mainInput4.value).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isCmyk(mainInput1.value,mainInput2.value,mainInput3.value)){
+				rgb = cmyk2rgb(mainInput1.value,mainInput2.value,mainInput3.value,mainInput4.value).match(/([+-]?)+\d+(\.\d+)?/g);
+				right = true;};
+			break;
 	};
-	colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
+	if(right==true)
+		colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
 });
 
 mainSelect.addEventListener("change", () => {
@@ -280,37 +324,53 @@ colorText2.addEventListener("change", () => {
 	var str = colorText2.value.match(/([+-]?)+\d+(\.\d+)?/g);
 	var rgb = new Array();
 	var index = color2Select.selectedIndex;
+	var right = new Boolean();
 	switch(color2Select.options[index].value)
 	{
 		case "rgb":
-			rgb=str;
-		break;
+			if(isRgb(str[0],str[1],str[2])){
+				rgb=str;
+				right=true;};
+			break;
 		case "lab":
-			rgb = lab2rgb(str[0],str[1],str[2]).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isLab(str[0],str[1],str[2])){
+				rgb = lab2rgb(str[0],str[1],str[2]).match(/([+-]?)+\d+(\.\d+)?/g);
+				right=true;};
+				break;
 		case "cmyk":
-			rgb = cmyk2rgb(str[0],str[1],str[2],str[3]).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isCmyk(str[0],str[1],str[2])){
+				rgb = cmyk2rgb(str[0],str[1],str[2],str[3]).match(/([+-]?)+\d+(\.\d+)?/g);
+				right=true;};
+				break;
 	};
-	colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
+	if(right==true)
+		colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
 });
 
 colorText3.addEventListener("change", () => {
 	var str = colorText3.value.match(/([+-]?)+\d+(\.\d+)?/g);
 	var rgb = new Array();
 	var index = color3Select.selectedIndex;
+	var right = new Boolean();
 	switch(color3Select.options[index].value)
 	{
 		case "rgb":
-			rgb=str;
-		break;
+			if(isRgb(str[0],str[1],str[2])){
+				rgb=str;
+				right=true;};
+			break;
 		case "lab":
-			rgb = lab2rgb(str[0],str[1],str[2]).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isLab(str[0],str[1],str[2])){
+				rgb = lab2rgb(str[0],str[1],str[2]).match(/([+-]?)+\d+(\.\d+)?/g);
+				right=true;};
+			break;
 		case "cmyk":
-			rgb = cmyk2rgb(str[0],str[1],str[2],str[3]).match(/([+-]?)+\d+(\.\d+)?/g);
-		break;
+			if(isCmyk(str[0],str[1],str[2])){
+				rgb = cmyk2rgb(str[0],str[1],str[2],str[3]).match(/([+-]?)+\d+(\.\d+)?/g);
+				right=true};
+			break;
 	};
-	colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
+	if(right==true)
+		colorPicker.color.rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
 });
 
